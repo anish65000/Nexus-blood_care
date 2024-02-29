@@ -1,0 +1,66 @@
+/* Background */
+body {
+    background-color: #f2f2f2;
+  }
+  
+  /* Form */
+  form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  label {
+    font-weight: 500;
+  }
+  
+  input[type="text"],
+  input[type="number"] {
+    padding: 12px;
+    border: 2px solid #ccc;
+  }
+  
+  button {
+    padding: 12px 30px;
+    background-color: #4183D7;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+  }
+  
+  button:hover {
+    background-color: #2a64b3;
+    transform: translateY(-2px);
+  }
+  
+  /* Table */
+  table {
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th {
+    background-color: #4183D7;
+    color: #fff;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 15px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  tr:hover {
+    background-color: #ddd;
+  }
+  
+  td {
+    background-color: #FFA07A; /* Light Salmon color for table data */
+    color: red; /* Text color */
+  }
+  
