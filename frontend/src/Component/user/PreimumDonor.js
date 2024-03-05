@@ -50,67 +50,65 @@ const PremiumDonorList = () => {
 
   return (
     <div className="flex flex-col bg-white rounded-lg shadow-md p-4">
-    <div className="flex items-center justify-between">
-      <h2 className="text-xl font-bold text-gray-800">Premium Donor List</h2>
-    </div>
-    <div className="mt-4">
-      <ul>
-        {premiumDonors.map((donor) => (
-          <li key={donor.id} className="mb-6">
-            <div className="grid grid-cols-2 bg-green">
-              <div className="col-span-1">
-                <div className="text-gray-700 font-bold">Profile Picture</div>
-  
-                <div className="profile-picture-container" style={{   height: '100px', width: '350px' }}>
-                  <img
-                    src={`http://localhost:5000${donor.profile_picture}`}
-                    alt={`${donor.first_name} ${donor.last_name} profile picture`}
-                    className="profile-picture"
-                    onError={(e) => console.error('Error loading image:', e)}
-                  />
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-gray-800">Premium Donor List</h2>
+      </div>
+      <div className="mt-4">
+        <ul>
+          {premiumDonors.map((donor) => (
+            <li key={donor.premium_donor_id} className="mb-6">
+              <div className="grid grid-cols-2 bg-green">
+                <div className="col-span-1">
+                  <div className="text-gray-700 font-bold">Profile Picture</div>
+
+                  <div className="profile-picture-container" style={{ height: '100px', width: '350px' }}>
+                    <img
+                      src={`http://localhost:5000${donor.profile_picture}`}
+                      alt={`${donor.userName} profile picture`}
+                      className="profile-picture"
+                      onError={(e) => console.error('Error loading image:', e)}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="col-span-1">
+                    <div className="text-gray-700 font-bold">Name</div>
+                    <div>{donor.user_name}</div>
+
+                    <div className="text-gray-700 font-bold">Availability</div>
+                    <div>{donor.availability_time}</div>
+                    <div className="text-gray-700 font-bold">Blood group</div>
+                    <div>{donor.userBloodGroup}</div>
+                    <div className="text-gray-700 font-bold">Donor health</div>
+                    <div>{donor.donor_health}</div>
+                    <div className="text-gray-700 font-bold">Address</div>
+                    <div>{donor.userAddress}</div>
+                  </div>
+                  <div className="col-span-1">
+                    <div className="text-gray-700 font-bold">Phone Number</div>
+                    <div>{donor.userPhone}</div>
+                    <div className="text-gray-700 font-bold">Age</div>
+                    <div>{donor.userAge}</div>
+                    <div className="text-gray-700 font-bold">Previous donation</div>
+                    <div>{donor.previous_dontaion}</div>
+                    <div className="text-gray-700 font-bold">Latitude</div>
+                    <div>{donor.latitude}</div>
+                    <div className="text-gray-700 font-bold">Longitude</div>
+                    <div>{donor.longitude}</div>
+                    <br />
+
+                    <Link to={`/donors/${donor.premium_donor_id}`}>
+                      <button type="button">View Profile</button>
+                    </Link>
+                  </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="col-span-1">
-                  <div className="text-gray-700 font-bold">Name</div>
-                  <div>{donor.first_name} {donor.last_name}</div>
-                  <div className="text-gray-700 font-bold">Availability</div>
-                  <div>{donor.availability_time}</div>
-                  <div className="text-gray-700 font-bold">Blood group</div>
-                  <div>{donor.blood_type}</div>
-                  <div className="text-gray-700 font-bold">Loaction</div>
-                  <div>{donor.email}</div>
-                  <div className="text-gray-700 font-bold">Donar health</div>
-                  <div>{donor.address}</div>
-                </div>
-                <div className="col-span-1">
-                  <div className="text-gray-700 font-bold">Phone Number</div>
-                  <div>{donor.phone_number}</div>
-                  <div className="text-gray-700 font-bold">age</div>
-                  <div>{donor.age}</div>
-                  <div className="text-gray-700 font-bold">Previous donation</div>
-                  <div>{donor.age}</div>
-                  <div className="text-gray-700 font-bold">Latitude</div>
-                  <div>{donor.latitude}</div>
-                  <div className="text-gray-700 font-bold">Longitude</div>
-                  <div>{donor.longitude}</div>
-                  <br></br>
-                  
-  <Link to={`/donors/${donor.premium_donor_id}`}>
-    <button type="button">View Profile</button>
-  </Link>
-
-
-                </div>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
-  </div>
- );
+  );
 };
-  
 
 export default PremiumDonorList;

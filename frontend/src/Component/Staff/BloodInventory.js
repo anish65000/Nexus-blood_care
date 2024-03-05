@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-import './BloodInventory.css';
-import Navbar from '../Navbar'; 
+import Navbar from './StaffNavbar';
 
 const BloodStockComponent = () => {
   const [bloodStockList, setBloodStockList] = useState([]);
@@ -12,7 +10,7 @@ const BloodStockComponent = () => {
     current_stock: 0,
     blood_status: '',
   });
-  
+
   const [editingBloodStockId, setEditingBloodStockId] = useState(null);
 
   // Fetch blood stock data when the component mounts
@@ -23,13 +21,14 @@ const BloodStockComponent = () => {
       })
       .catch(error => console.error('Error fetching blood stock:', error));
   }, []);
+
   const handleUpdateBloodStock = (id) => {
     const bloodStockToUpdate = bloodStockList.find(item => item.id === id);
     if (!bloodStockToUpdate) {
       console.error('Blood stock not found for updating.');
       return;
     }
-  
+
     axios.put(`http://localhost:5000/login/stf/inv/update/${id}`, bloodStockToUpdate)
       .then(response => {
         console.log('Blood stock updated successfully:', response.data);
@@ -43,8 +42,6 @@ const BloodStockComponent = () => {
       })
       .catch(error => console.error('Error updating blood stock:', error));
   };
-  
-  
 
   const handleEditBloodStock = (id) => {
     setEditingBloodStockId(id);
@@ -86,87 +83,95 @@ const BloodStockComponent = () => {
       })
       .catch(error => console.error('Error deleting blood stock:', error));
   };
-  
 
   return (
-    <div>
-      <h1>Blood Stock Management</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Blood Group</th>
-            <th>Total Units</th>
-            <th>Current Stock</th>
-            <th>Blood Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-  {bloodStockList.map((bloodStock, index) => (
-    <tr key={bloodStock.id || index}>
-      <td>{bloodStock.blood_group}</td>
-      <td>
-        {editingBloodStockId === bloodStock.id ? (
-          <input
-            type="number"
-            value={bloodStock.total_unit}
-            onChange={(e) => setBloodStockList(prevList =>
-              prevList.map(item => (item.id === bloodStock.id ? { ...item, total_unit: Number(e.target.value) } : item))
-            )}
-          />
-        ) : (
-          bloodStock.total_unit
-        )}
-      </td>
-      <td>
-        {editingBloodStockId === bloodStock.id ? (
-          <input
-            type="number"
-            value={bloodStock.current_stock}
-            onChange={(e) => setBloodStockList(prevList =>
-              prevList.map(item => (item.id === bloodStock.id ? { ...item, current_stock: Number(e.target.value) } : item))
-            )}
-          />
-        ) : (
-          bloodStock.current_stock
-        )}
-      </td>
-      <td>
-        {editingBloodStockId === bloodStock.id ? (
-          <input
-            type="text"
-            value={bloodStock.blood_status}
-            onChange={(e) => setBloodStockList(prevList =>
-              prevList.map(item => (item.id === bloodStock.id ? { ...item, blood_status: e.target.value } : item))
-            )}
-          />
-        ) : (
-          bloodStock.blood_status
-        )}
-      </td>
-      <td>
-        {editingBloodStockId === bloodStock.id ? (
-          <button onClick={() => handleUpdateBloodStock(bloodStock.id)}>
-            Save
-          </button>
-        ) : (
-          <button onClick={() => handleEditBloodStock(bloodStock.id)}>
-            Edit
-          </button>
-        )}
-        <button onClick={() => handleDeleteBloodStock(bloodStock.id)}>
-          Delete
-        </button>
-      </td>
-    </tr>
-  ))}
-</tbody>
+    <div className="container mx-auto p-4 text-lg">
+      <Navbar />
+      <h1 className="text-4xl font-bold mb-4">Blood Stock Management</h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-300 rounded-lg table-auto">
+          <thead>
+            <tr className="bg-green text-left text-sm font-medium uppercase tracking-wider">
+              <th className="py-4 px-6 border border-gray">Blood Group</th>
+              <th className="py-4 px-6 border border-gray">Total Units</th>
+              <th className="py-4 px-6 border border-gray">Current Stock</th>
+              <th className="py-4 px-6 border border-gray">Blood Status</th>
+              <th className="py-4 px-6 border border-gray">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bloodStockList.map((bloodStock, index) => (
+              <React.Fragment key={bloodStock.id || index}>
+                <tr>
+                  <td>{bloodStock.blood_group}</td>
+                  <td>
+                    {editingBloodStockId === bloodStock.id ? (
+                      <input
+                        type="number"
+                        value={bloodStock.total_unit}
+                        onChange={(e) => setBloodStockList(prevList =>
+                          prevList.map(item => (item.id === bloodStock.id ? { ...item, total_unit: Number(e.target.value) } : item))
+                        )}
+                      />
+                    ) : (
+                      bloodStock.total_unit
+                    )}
+                  </td>
+                  <td>
+                    {editingBloodStockId === bloodStock.id ? (
+                      <input
+                        type="number"
+                        value={bloodStock.current_stock}
+                        onChange={(e) => setBloodStockList(prevList =>
+                          prevList.map(item => (item.id === bloodStock.id ? { ...item, current_stock: Number(e.target.value) } : item))
+                        )}
+                      />
+                    ) : (
+                      bloodStock.current_stock
+                    )}
+                  </td>
+                  <td>
+                    {editingBloodStockId === bloodStock.id ? (
+                      <input
+                        type="text"
+                        value={bloodStock.blood_status}
+                        onChange={(e) => setBloodStockList(prevList =>
+                          prevList.map(item => (item.id === bloodStock.id ? { ...item, blood_status: e.target.value } : item))
+                        )}
+                      />
+                    ) : (
+                      bloodStock.blood_status
+                    )}
+                  </td>
+                  <td>
+  {editingBloodStockId === bloodStock.id ? (
+    <button className="text-blue-600" onClick={() => handleUpdateBloodStock(bloodStock.id)}>
+      Save
+    </button>
+  ) : (
+    <>
+      <button className="text-blue-600 mr-2" onClick={() => handleEditBloodStock(bloodStock.id)}>
+        Edit
+      </button>
+      &nbsp; {/* Add a non-breaking space here */}
+      <button className="text-red-600" onClick={() => handleDeleteBloodStock(bloodStock.id)}>
+        Delete
+      </button>
+    </>
+  )}
+</td>
 
-
-      </table>
-
+                </tr>
+                <tr>
+                  <td colSpan="5" className="border-b border-gray-300"></td>
+                </tr>
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
-};
+}
 
 export default BloodStockComponent;

@@ -1,3 +1,4 @@
+// LoginPage.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -21,26 +22,22 @@ function LoginPage() {
       const response = await fetch('http://localhost:5000/user/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
         const { token, userData } = await response.json();
-      
+
         localStorage.setItem('token', token);
         toast('Login successful!', { type: 'success' });
-      
-        // Pass the userRole from the userData object
+
         login(userData.userRole, username, userData);
         navigate('/user-home');
-      
-      
       } else {
         toast('Invalid credentials! Please check your username and password.', { type: 'error' });
       }
-
     } catch (error) {
       console.error(error);
       toast('An error occurred. Please try again.', { type: 'error' });
@@ -80,7 +77,7 @@ function LoginPage() {
 
           <button
             type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 w-full"
+            className="bg-red text-white py-2 px-4 rounded-md hover:bg-blue-600 w-full"
           >
             Login
           </button>

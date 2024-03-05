@@ -9,10 +9,11 @@ import { useUser } from './Usercontext';
 const UserNavbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
-  const { state: userData, logout, state: { isLoggedIn, userRole } } = useUser();
+  const { state: { isLoggedIn, userRole, username }, logout } = useUser();
 
   useEffect(() => {
     // Check user authentication status or load user data here
+    // For example, fetch user data from an API or perform any asynchronous operation.
   }, []);
 
   const toggleDropdown = () => {
@@ -27,7 +28,6 @@ const UserNavbar = () => {
   return (
     <nav className="bg-red sticky top-0 z-50">
       <div className="container mx-auto p-7 flex items-center justify-between">
-        {/* App Home Link */}
         <div className="flex items-center ml-auto space-x-4">
           <Link to="/" className="text-white mr-4 font-bold">
             <FontAwesomeIcon icon={faHome} size="lg" />
@@ -36,19 +36,17 @@ const UserNavbar = () => {
         </div>
 
         <div className="flex items-center ml-auto space-x-20">
-          {/* Notifications Icon */}
           <div className="relative cursor-pointer text-gray topbarIconContainer">
             <NotificationsNone className="h-6 w-6" />
             <span className="absolute top-0 right-0 w-5 h-5 bg-red text-white rounded-full flex items-center justify-center text-xs topIconBadge">2</span>
             <span className="ml-2">Notifications</span>
           </div>
 
-          {/* Profile Dropdown */}
           {isLoggedIn && (
             <div className="relative cursor-pointer text-gray" onClick={toggleDropdown}>
               <div className="flex items-center">
                 <FontAwesomeIcon icon={faUserAlt} size="lg" />
-                <span className="ml-2">{userData.username}</span>
+                <span className="ml-2">{username}</span>
               </div>
               {showDropdown && (
                 <div className="absolute mt-2 p-2 bg-white text-gray-800 shadow-lg rounded">
@@ -69,7 +67,7 @@ const UserNavbar = () => {
                           <Link to="/recipient-profile" className="block py-2">
                             Recipient Profile
                           </Link>
-                          <Link to="/blood-request-history" className="block py-2">
+                          <Link to="/blood" className="block py-2">
                             Blood Request History
                           </Link>
                         </>
@@ -84,7 +82,6 @@ const UserNavbar = () => {
             </div>
           )}
 
-          {/* Blood Requests/Donations (based on user role) */}
           {isLoggedIn && (
             <>
               {(userRole && userRole.toLowerCase() === 'donor') && (
@@ -102,7 +99,6 @@ const UserNavbar = () => {
             </>
           )}
 
-          {/* Logout Icon */}
           {isLoggedIn && (
             <div className="relative cursor-pointer text-gray">
               <button className="text-white" onClick={handleLogout}>
@@ -112,7 +108,6 @@ const UserNavbar = () => {
             </div>
           )}
 
-          {/* Settings Icon */}
           {isLoggedIn && (
             <div className="relative cursor-pointer text-gray-500">
               <Settings className="h-6 w-6" />

@@ -15,7 +15,7 @@ const BloodbankController = require('../Controller/Admin/RegisterBloodBankContro
 const campController = require('../Controller/Staff/CampController');
 const BookAppointmentController = require('../Controller/Staff/CreateApppointment');
 const handleAppointmentController  = require('../Controller/user/PerformAppController')
-const PremiumDonorController = require('../Controller/Staff/PremiumDonor')
+const PremiumDonorController = require('../Controller/user/PremiumDonor')
 const BloodDonationController = require('../Controller/Staff/BloodDonationController')
 const StaffRegisterController = require('../Controller/Staff/StaffRegisterController');
 const StaffLoginController = require('../Controller/Staff/StaffLoginController');
@@ -34,15 +34,15 @@ app.use('/profile-pictures', express.static('public/profile-pictures'));
 app.use(cors());
 
 
-// Create a connection pool
 const db = mysql.createConnection({
-  connectionLimit: 10,
-  host: 'localhost',
+  host: '127.0.0.1',
   user: 'root',
   password: '',
-  database: 'fyp'
+  database: 'fyp',
+  connectTimeout: 60000,
 });
 
+// Connect to the database
 db.connect(err => {
   if (err) {
     console.error('Error connecting to database:', err);
@@ -51,6 +51,10 @@ db.connect(err => {
   console.log('Connected to MySQL database');
 });
 
+// Perform your database operations here...
+
+// Close the connection when done (optional)
+
 
 
 // Register User Controller
@@ -58,7 +62,7 @@ UserRegisterController(app,db);
 userLoginController(app, db);
 EligibilityController(app, db); // Adjusted registration
 DonorInventoryController(app, db);
-BloodRequestController(app, db);
+BloodRequestController(app, db,authenticateToken);
 DonationController(app, db, authenticateToken);
 userLoginController(app, db);
 BloodbankController(app, db);
@@ -71,6 +75,37 @@ BloodStockController(app,db);
 StaffRegisterController(app,db);
 app.use('/', StaffLoginController(db));
 app.use('/', userLoginController(db)); 
+
+
+// Endpoint to get nearby donors
+// Endpoint to get nearby donors
+app.get('/api/donors/nearbys', (req, res) => {
+  const { latitude, longitude } = req.query;
+
+  // SQL query to select nearby donors based on latitude and longitude
+  const sqlQuery = `
+  SELECT pd.*, ud.*
+  FROM premium_donors pd
+  JOIN user_details ud ON pd.user_id = ud.id
+  WHERE
+      pd.latitude BETWEEN ? - 0.0001 AND ? + 0.0001
+      AND pd.longitude BETWEEN ? - 0.0001 AND ? + 0.0001
+  
+  `;
+  const params = [latitude, longitude];
+
+  // Execute the SQL query
+  db.query(sqlQuery, params, (error, results) => {
+    if (error) {
+      console.error('Error fetching nearby donors:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+});
+
+
 
 
 

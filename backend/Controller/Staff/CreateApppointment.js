@@ -45,12 +45,12 @@ const BookAppointmentController = (app, db) => {
   // Endpoint to handle confirming appointments
   app.post('/confirm-booking', async (req, res) => {
     try {
-      const { doc_id, userId, slot_time } = req.body;
+      const {stf_id, userId, slot_time } = req.body;
 
       // Check if the staff member is a doctor
       const [staffType] = await db.promise().query(
         'SELECT stf_staff_type FROM time_slots WHERE stf_id = ?',
-        [doc_id]
+        
       );
 
       if (staffType && staffType.length > 0 && staffType[0].stf_staff_type === 'doctor') {
@@ -60,7 +60,7 @@ const BookAppointmentController = (app, db) => {
           'FROM appointments ' +
           'INNER JOIN user_details ON appointments.user_id = user_details.user_id ' +
           'WHERE appointments.DOC_ID = ? AND appointments.slot_time = ? AND appointments.user_id = ?',
-          [doc_id, slot_time, userId]
+          [stf_id, slot_time, userId]
         );
 
         // Check if the appointment details are found

@@ -57,9 +57,10 @@ export const UserProvider = ({ children }) => {
 
     if (storedUserData) {
       const parsedUserData = JSON.parse(storedUserData);
-      const { userRole } = parsedUserData;
+      const { userRole, username } = parsedUserData;
 
-      dispatch({ type: 'LOGIN', userData: parsedUserData, userRole });
+      // Pass the parsedUserData to login to ensure authentication data is correctly set
+      login(userRole, username, parsedUserData);
     }
   }, []);
 

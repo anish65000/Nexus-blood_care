@@ -1,5 +1,8 @@
+const authenticateToken = require('../authenticateToken');
+
 const BloodRequestController = (app, db) => {
-  app.post("/login/stf/request", async (req, res) => {
+  // Apply authentication middleware to the blood donation request route
+  app.post("/login/stf/request", authenticateToken, async (req, res) => {
     const { bloodGroup, unit, patientName, patientAddress, patientContact } = req.body;
 
     if (!bloodGroup || !unit || !patientName || !patientAddress || !patientContact) {
@@ -7,25 +10,48 @@ const BloodRequestController = (app, db) => {
     }
 
     try {
+      // Ensure req.userId is defined after authentication middleware
+      if (!req.user || !req.user.userId) {
+        return res.status(401).send({ message: "Unauthorized. Missing user ID." });
+      }
+
       const connection = await db.promise();
       await connection.beginTransaction();
 
       try {
-        const [bloodInventory] = await connection.execute('SELECT * FROM blood_inventory WHERE blood_group = ?', [bloodGroup]);
+        // Assuming user details are stored in the user_details table
+        console.log("req.user.userId:", req.user.userId);
+        const [userDetails] = await connection.execute('SELECT userRole FROM user_details WHERE Id = ?', [req.user.userId]);
 
-        if (bloodInventory.length > 0 && unit <= bloodInventory[0].current_stock) {
-          await connection.execute('UPDATE blood_inventory SET current_stock = current_stock - ? WHERE blood_group = ?', [unit, bloodGroup]);
+        if (userDetails.length > 0 && userDetails[0].userRole === 'Recipient') {
+          const [bloodInventory] = await connection.execute('SELECT * FROM blood_inventory WHERE blood_group = ?', [bloodGroup]);
 
-          await connection.execute('INSERT INTO blood_request (blood_group, unit, patient_name, patient_address, patient_contact) VALUES (?, ?, ?, ?, ?)', [bloodGroup, unit, patientName, patientAddress, patientContact]);
+          if (bloodInventory.length > 0 && unit <= bloodInventory[0].current_stock) {
+            await connection.execute('UPDATE blood_inventory SET current_stock = current_stock - ? WHERE blood_group = ?', [unit, bloodGroup]);
 
-          await connection.commit();
+            console.log("Inserting into blood_request table with values:", [bloodGroup, unit, patientName, patientAddress, patientContact]);
 
-          if (!res.headersSent) {
-            res.send({ message: "REQUEST ACCEPTED. COLLECT IT FROM THE BLOOD BANK" });
+            // Ensure all parameters are defined before executing the query
+            const params = [bloodGroup, unit, patientName, patientAddress, patientContact];
+            if (params.some(param => param === undefined)) {
+              return res.status(400).send({ message: "Invalid request. Missing required fields." });
+            }
+
+            await connection.execute('INSERT INTO blood_request (blood_group, unit, patient_name, patient_address, patient_contact) VALUES (?, ?, ?, ?, ?)', params);
+
+            await connection.commit();
+
+            if (!res.headersSent) {
+              res.send({ message: "REQUEST ACCEPTED. COLLECT IT FROM THE BLOOD BANK" });
+            }
+          } else {
+            if (!res.headersSent) {
+              res.send({ message: "INSUFFICIENT STOCKS!" });
+            }
           }
         } else {
           if (!res.headersSent) {
-            res.send({ message: "INSUFFICIENT STOCKS!" });
+            res.status(403).send({ message: "Permission denied. User is not a recipient." });
           }
         }
       } catch (error) {
@@ -39,60 +65,6 @@ const BloodRequestController = (app, db) => {
       }
     }
   });
-
-
-  app.get('/login/stf/requests', async (req, res) => {
-    try {
-      const connection = await db.promise();
-      const [bloodRequests] = await connection.execute('SELECT * FROM blood_request');
-      res.send(bloodRequests);
-    } catch (error) {
-      console.error("Error retrieving blood requests:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
-
-  app.delete('/login/stf/request/:requestId', async (req, res) => {
-    const requestId = req.params.requestId;
-
-    try {
-      const connection = await db.promise(); // Use the promise() method to convert it into a promise-based connection
-      await connection.beginTransaction();
-
-      try {
-        const [existingRequest] = await connection.execute('SELECT * FROM blood_request WHERE request_id = ?', [requestId]);
-
-        if (existingRequest.length === 0) {
-          res.status(404).send({ message: "Blood request not found." });
-          return;
-        }
-
-        await connection.execute('UPDATE blood_inventory SET current_stock = current_stock + ? WHERE blood_group = ?', [existingRequest[0].unit, existingRequest[0].blood_group]);
-
-        await connection.execute('DELETE FROM blood_request WHERE request_id = ?', [requestId]);
-
-        await connection.commit();
-
-        if (!res.headersSent) {
-          res.send({ message: "Blood request canceled successfully." });
-        }
-      } catch (error) {
-        await connection.rollback();
-        console.error("Error canceling blood request:", error);
-        if (!res.headersSent) {
-          res.status(500).send("Internal Server Error");
-        }
-      } finally {
-        connection.release();
-      }
-    } catch (error) {
-      console.error("Error canceling blood request:", error);
-      if (!res.headersSent) {
-        res.status(500).send("Internal Server Error");
-      }
-    }
-  });
-
 };
 
 module.exports = BloodRequestController;

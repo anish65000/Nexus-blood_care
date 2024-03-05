@@ -22,7 +22,7 @@ const PremiumDonorDetails = () => {
           throw new Error('Failed to fetch donor details');
         }
         const data = await response.json();
-        setDonorDetails(data);
+        setDonorDetails(data.premium_donor); // Extracting premium_donor from response
       } catch (error) {
         setError(error.message);
       } finally {
@@ -46,42 +46,40 @@ const PremiumDonorDetails = () => {
     return <p>Error: {error}</p>;
   }
 
-  
-return (
-  <div className="flex flex-col items-center justify-between">
-    <div className="flex items-center justify-between mb-4">
-      <h2 className="text-xl font-bold text-gray-800">Donor Details</h2>
-    </div>
-
-    <div className="grid grid-cols-8  bg-green gap-10">
-    <div className="col-span-1">
-  {/* Profile Picture */}
-  <div className="mb-2 text-gray-700 font-bold">Profile Picture</div>
-  <div className="profile-picture-container rounded-full overflow-hidden">
-    <img
-      src={`http://localhost:5000${donorDetails.profile_picture}`}
-      alt={`${donorDetails.first_name}'s profile picture`}
-      className="profile-picture w-400 h-300 object-cover"
-      onError={(e) => console.error('Error loading image:', e)}
-    />
-  </div>
-</div>
-
-
-      {/* Basic Information */}
-      <div className="col-span-4 p-20 ">
-        <p className="text-base font-semibold mb-1">Basic Information</p>
-        <p>ID: {donorDetails.premium_donor_id}</p>
-        <p>First Name: {donorDetails.first_name}</p>
-        <p>Last Name: {donorDetails.last_name}</p>
-        <p>Email: {donorDetails.email}</p>
-        <p>Blood Type: {donorDetails.blood_type}</p>
-        <p>Age: {donorDetails.age}</p>
+  return (
+    <div className="flex flex-col items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-bold text-gray-800">Donor Details</h2>
       </div>
-    </div>
 
-    <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4">Request Blood</button>
-  </div>
-);
-}
+      <div className="grid grid-cols-8 bg-green gap-10">
+        {/* Profile Picture */}
+        <div className="col-span-1">
+          <div className="mb-2 text-gray-700 font-bold">Profile Picture</div>
+          <div className="profile-picture-container rounded-full overflow-hidden">
+            <img
+              src={`http://localhost:5000${donorDetails.profile_picture}`}
+              alt={`${donorDetails.user_name}'s profile picture`}
+              className="profile-picture w-400 h-300 object-cover"
+              onError={(e) => console.error('Error loading image:', e)}
+            />
+          </div>
+        </div>
+
+        {/* Basic Information */}
+        <div className="col-span-4 p-20">
+          <p className="text-base font-semibold mb-1">Basic Information</p>
+          <p>ID: {donorDetails.premium_donor_id}</p>
+          <p> Name: {donorDetails.userName}</p>
+          <p>Email: {donorDetails.userEmail}</p>
+          <p>Blood Type: {donorDetails.userBloodGroup}</p>
+          <p>Age: {donorDetails.userAge}</p>
+        </div>
+      </div>
+
+      <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4">Request Blood</button>
+    </div>
+  );
+};
+
 export default PremiumDonorDetails;

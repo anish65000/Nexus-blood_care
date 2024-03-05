@@ -9,7 +9,7 @@ import BloodStock from './Component/Staff/BloodInventory';
 import DonorStockComponent from './Component/Staff/DonorInventory'; 
 import BloodTestForm from './Component/Staff/BloodTesting';
 import AddDonor from './Component/Staff/RegisterDonor';
-import BloodRequestForm from './Component/Staff/BloodRequest';
+import BloodRequestComponent from './Component/user/BloodRequest';
 
 
 import PremiumDonorManagement from './Component/user/PreimumDonor' 
@@ -23,11 +23,14 @@ import RegisterBloodBankForm from './Component/Admin/RegisterBloodBank';
 import BankDetails from './Component/Admin/ViewBloodBank';
 import BloodBankManagement from './Component/Admin/bank';
 import { UserProvider } from './Component/user/Usercontext';
+import NearbyDonorsMap from './Component/user/NearbyDonor';
 
 import BloodDonationForm from './Component/Camp/CampDonation';
 import LoginPage from './Component/Staff/Loginpage';
 import UserHome from './Component/user/UserHomePage';
 import UserNavbar from './Component/user/UserNavbar';
+import BloodStockForm from './Component/Staff/BloodStockForm';
+
 function App() {
   return (
     <BrowserRouter>
@@ -35,14 +38,16 @@ function App() {
       <Routes>
       <Route path="/user/login" element={<UserLoginPage />} />
       <Route path="/Navbar" element={<UserNavbar />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/staff/login" element={<LoginPage />} />
         <Route path="/register" element={<UserRegister />} />
-        <Route path="/homepage" element={<HomePage />} />
+       
+        <Route path="/" element={<HomePage />} />
         <Route path="/staff" element={<StaffRegistration />} />
         <Route path="/bloodstock" element={<BloodStock />} />
         <Route path="/donorstock" element={<DonorStockComponent />} />
         <Route path="/testingblood" element={<BloodTestForm />} />
-        <Route path="/BloodRequestForm" element={< BloodRequestForm />} />
+        <Route path="/blood" element={<  BloodRequestComponent />} />
+        <Route path="/AddBlood" element={< BloodStockForm/>} />
         <Route path="/campmanagement" element={<  CampBloodDonation  />} /> 
         <Route path="/camp" element={<CampSearch/>} />
         <Route path="/BloodRequestHistory" element={<BloodRequestHistory/>} />
@@ -57,6 +62,7 @@ function App() {
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/staffhomepage" element={<StaffHomepage />} />
         <Route path="/user-home" element={<UserHome />} />
+        <Route path="/nearbydonor" element={<NearbyDonorsMap />} />
 
       </Routes>
       </UserProvider>
