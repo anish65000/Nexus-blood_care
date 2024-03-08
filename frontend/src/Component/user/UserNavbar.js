@@ -57,8 +57,8 @@ const UserNavbar = () => {
                           <Link to="/donor-profile" className="block py-2">
                             Donor Profile
                           </Link>
-                          <Link to="/blood-donation-history" className="block py-2">
-                            Blood Donation History
+                          <Link to="/donate" className="block py-2">
+                            Blood Donation 
                           </Link>
                         </>
                       )}

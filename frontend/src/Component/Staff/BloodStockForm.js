@@ -18,7 +18,7 @@ const BloodStockForm = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('/login/stf/inv/insert', bloodStockData);
+      const response = await axios.post('`http://localhost:5000/login/stf/inv/insert', bloodStockData);
       console.log('Blood stock inserted successfully:', response.data);
 
       // Handle success

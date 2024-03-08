@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useUser } from './Usercontext'; // Import the UserProvider context
-import { toast } from 'react-toastify'; // Import react-toastify
+import { toast, ToastContainer } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css'; // Import react-toastify styles
 
 const BloodRequestForm = () => {
@@ -99,8 +99,8 @@ const BloodRequestForm = () => {
       </div>
       <button type="submit" className="bg-green hover:bg-green-dark text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">Submit</button>
     </form>
+    <ToastContainer />
   </div>
-  
   );
 };
 

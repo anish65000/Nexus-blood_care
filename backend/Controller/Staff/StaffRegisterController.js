@@ -1,10 +1,6 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
 const express = require('express');
-const mysql = require('mysql');
-
-dotenv.config();
+const upload = require('./multerConfig'); // Import Multer configuration
 
 const StaffRegisterController = (app, db) => {
   const query = async (sql, params) => {
@@ -16,7 +12,8 @@ const StaffRegisterController = (app, db) => {
     }
   };
 
-  app.post("/reg/stf", async (req, res) => {
+  // Route to handle staff registration
+  app.post("/reg/stf", upload.single('avatar'), async (req, res) => {
     try {
       const {
         stfName,
@@ -27,6 +24,13 @@ const StaffRegisterController = (app, db) => {
         stfPassword,
         stfStaffType
       } = req.body;
+
+      // Handle file upload if avatar is present in the request
+      const avatar = req.file;
+      let imagePath = '';
+      if (avatar) {
+        imagePath = avatar.path;
+      }
 
       const existingStaff = await query('SELECT * FROM stf_login WHERE userName = ?', [stfUserName]);
 
@@ -39,15 +43,15 @@ const StaffRegisterController = (app, db) => {
       const connection = await db.promise();
       try {
         const [staffDetailsResult] = await connection.query(
-          'INSERT INTO stf_details (stfName, stfMail, stfPhone, stfAddress, stfStaffType) VALUES (?, ?, ?, ?, ?)',
-          [stfName, stfEmail, stfPhone, stfAddress, stfStaffType]
+          'INSERT INTO stf_details (stfName, stfMail, stfPhone, stfAddress, stfStaffType, avatar) VALUES (?, ?, ?, ?, ?, ?)',
+          [stfName, stfEmail, stfPhone, stfAddress, stfStaffType, imagePath]
         );
 
         const staffId = staffDetailsResult.insertId;
 
         await connection.query(
-          'INSERT INTO stf_login (stf_id, userName, password) VALUES (?, ?, ?)',
-          [staffId, stfUserName, hashedPassword]
+          'INSERT INTO stf_login (stf_id, userName, password, stfStaffType) VALUES (?, ?, ?, ?)',
+          [staffId, stfUserName, hashedPassword, stfStaffType]
         );
 
         await connection.commit();
@@ -57,9 +61,7 @@ const StaffRegisterController = (app, db) => {
       } catch (err) {
         await connection.rollback();
         throw err;
-      } finally {
-        connection.close();
-      }
+      } 
     } catch (error) {
       console.error("Error during staff registration:", error);
       res.status(500).send({ success: false, error: "Internal Server Error" });

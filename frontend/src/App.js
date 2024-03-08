@@ -14,7 +14,7 @@ import BloodRequestComponent from './Component/user/BloodRequest';
 
 import PremiumDonorManagement from './Component/user/PreimumDonor' 
 import DonorDetailsPage from './Component/user/DonorDetails';
-import AboutUs from './Component/AboutUs';
+
 import StaffHomepage from './Component/Staff/StaffHomePage';
 import BloodRequestHistory from './Component/Staff/RequestHistory';
 import CampBloodDonation from './Component/Camp/Camp';
@@ -24,48 +24,56 @@ import BankDetails from './Component/Admin/ViewBloodBank';
 import BloodBankManagement from './Component/Admin/bank';
 import { UserProvider } from './Component/user/Usercontext';
 import NearbyDonorsMap from './Component/user/NearbyDonor';
+import { StaffProvider } from './Component/Staff/StaffContext';
 
 import BloodDonationForm from './Component/Camp/CampDonation';
 import LoginPage from './Component/Staff/Loginpage';
 import UserHome from './Component/user/UserHomePage';
 import UserNavbar from './Component/user/UserNavbar';
 import BloodStockForm from './Component/Staff/BloodStockForm';
+import DonationForm from './Component/user/Blooddonation';
+import ManageDonations from './Component/Staff/ViewDonation';
+
+
 
 function App() {
   return (
     <BrowserRouter>
-    <UserProvider>
-      <Routes>
-      <Route path="/user/login" element={<UserLoginPage />} />
-      <Route path="/Navbar" element={<UserNavbar />} />
-        <Route path="/staff/login" element={<LoginPage />} />
-        <Route path="/register" element={<UserRegister />} />
-       
-        <Route path="/" element={<HomePage />} />
-        <Route path="/staff" element={<StaffRegistration />} />
-        <Route path="/bloodstock" element={<BloodStock />} />
-        <Route path="/donorstock" element={<DonorStockComponent />} />
-        <Route path="/testingblood" element={<BloodTestForm />} />
-        <Route path="/blood" element={<  BloodRequestComponent />} />
-        <Route path="/AddBlood" element={< BloodStockForm/>} />
-        <Route path="/campmanagement" element={<  CampBloodDonation  />} /> 
-        <Route path="/camp" element={<CampSearch/>} />
-        <Route path="/BloodRequestHistory" element={<BloodRequestHistory/>} />
-        <Route path="/Adddonor" element={<AddDonor />} />
-        <Route path="/CampComponent" element={< BloodDonationForm  />} />
-        <Route path="/donors" element={< PremiumDonorManagement  />} />
-        <Route path="/RegisterBank" element={< RegisterBloodBankForm  />} />
-        <Route path="/BloodBankManagement" element={< BloodBankManagement/>} />
-       
-        <Route path="/bloodbank/:id" element={<BankDetails  />} />
-        <Route path="/donors/:id" element={<DonorDetailsPage />} />
-        <Route path="/AboutUs" element={<AboutUs />} />
-        <Route path="/staffhomepage" element={<StaffHomepage />} />
-        <Route path="/user-home" element={<UserHome />} />
-        <Route path="/nearbydonor" element={<NearbyDonorsMap />} />
-
-      </Routes>
-      </UserProvider>
+     
+        <UserProvider> {/* UserProvider wraps the entire application */}
+          <StaffProvider> {/* StaffProvider nested inside UserProvider */}
+          <Routes>
+            <Route path="/staffhomepage" element={<StaffHomepage />} />
+            <Route path="/user/login" element={<UserLoginPage />} />
+            <Route path="/Navbar" element={<UserNavbar />} />
+            <Route path="/staff/login" element={<LoginPage />} />
+            <Route path="/donate" element={<DonationForm />} />
+            <Route path="/register" element={<UserRegister />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/staff" element={<StaffRegistration />} />
+            <Route path="/bloodstock" element={<BloodStock />} />
+            <Route path="/donorstock" element={<DonorStockComponent />} />
+            <Route path="/testingblood" element={<BloodTestForm />} />
+            <Route path="/blood" element={<BloodRequestComponent />} />
+            <Route path="/AddBlood" element={<BloodStockForm />} />
+            <Route path="/campmanagement" element={<CampBloodDonation />} />
+            <Route path="/camp" element={<CampSearch />} />
+            <Route path="/BloodRequestHistory" element={<BloodRequestHistory />} />
+            <Route path="/Adddonor" element={<AddDonor />} />
+            <Route path="/CampComponent" element={<BloodDonationForm />} />
+            <Route path="/donors" element={<PremiumDonorManagement />} />
+            <Route path="/RegisterBank" element={<RegisterBloodBankForm />} />
+            <Route path="/BloodBankManagement" element={<BloodBankManagement />} />
+            <Route path="/bloodbank/:id" element={<BankDetails />} />
+            <Route path="/donors/:id" element={<DonorDetailsPage />} />
+            {/* <Route path="/AboutUs" element={<AboutUs />} /> */}
+            <Route path="/user-home" element={<UserHome />} />
+            <Route path="/nearbydonor" element={<NearbyDonorsMap />} />
+            <Route path="/managedonation" element={<ManageDonations />} />
+            </Routes>
+          </StaffProvider>
+        </UserProvider>
+     
     </BrowserRouter>
   );
 }

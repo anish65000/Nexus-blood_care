@@ -18,6 +18,8 @@ const handleAppointmentController  = require('../Controller/user/PerformAppContr
 const PremiumDonorController = require('../Controller/user/PremiumDonor')
 const BloodDonationController = require('../Controller/Staff/BloodDonationController')
 const StaffRegisterController = require('../Controller/Staff/StaffRegisterController');
+
+const ManageDonationcontroller = require('../Controller/Staff/ManageDonationcontroller');
 const StaffLoginController = require('../Controller/Staff/StaffLoginController');
 
 const app = express();
@@ -64,6 +66,7 @@ EligibilityController(app, db); // Adjusted registration
 DonorInventoryController(app, db);
 BloodRequestController(app, db,authenticateToken);
 DonationController(app, db, authenticateToken);
+ManageDonationcontroller(app, db, authenticateToken);
 userLoginController(app, db);
 BloodbankController(app, db);
 campController(app,db);

@@ -20,13 +20,13 @@ const Navbar = () => {
       <Link to="/events">Events</Link>
     </li>
     <li>
-      <Link to="/donor">Donor</Link>
+      <Link to="/user/login">Donor</Link>
     </li>
     <li>
       <Link to="/AboutUs">Blog</Link>
     </li>
     <li>
-      <Link to="/blood-recipient">Blood Recipient</Link>
+      <Link to="/user/login">Blood Recipient</Link>
     </li>
     <li>
       <Link to="/staff">Staff</Link>
